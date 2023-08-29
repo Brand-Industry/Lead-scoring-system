@@ -1,0 +1,18 @@
+.ListRole {
+  &__table {
+    width: 100%;
+  }
+  .btn {
+    height: auto;
+  }
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    h3 {
+      margin-top: 1rem !important;
+      margin-bottom: 1rem !important;
+    }
+  }
+}

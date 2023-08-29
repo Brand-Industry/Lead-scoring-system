@@ -1,0 +1,34 @@
+{# @var plugin \brandindustry\craftleadscoringsystem\LeadScoringSystem #}
+{# @var settings \brandindustry\craftleadscoringsystem\models\Settings #}
+
+{% extends "_layouts/cp" %}
+{#{% import '_includes/forms' as forms %}#}
+
+{% if title is not defined %}
+    {% set title = craft.leadSystem.getPluginName() %}
+{% endif %}
+
+{% set navItems = {
+    'general': { title: 'General Settings' | t('Configuración general') },
+} %}
+
+{% set selectedItem = 'general' %}
+{% set fullPageForm = true %}
+
+{% block sidebar %}
+    <nav class="navigation-settings-tabs" data-vui-tabs>
+        <ul>
+            {% for id, item in navItems %}
+                {% if item.heading is defined %}
+                    <li class="heading"><span>{{ item.heading }}</span></li>
+                {% else %}
+                    <li>
+                        <a id="tab-{{ loop.index }}" href="#tab-{{ id }}" class="tab {% if id == selectedItem %}sel{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}

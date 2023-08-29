@@ -1,0 +1,22 @@
+.FieldsForm {
+  .btn {
+    height: auto;
+  }
+  &__col {
+    &,
+    & > * {
+      box-sizing: border-box;
+    }
+  }
+  &__contentAdd {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
+    .btn:hover {
+      color: var(--bs-btn-hover-color);
+      background-color: var(--bs-btn-hover-bg);
+      border-color: var(--bs-btn-hover-border-color);
+    }
+  }
+}

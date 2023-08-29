@@ -1,0 +1,44 @@
+{
+  "name": "brand-industry/craft-lead-scoring-system",
+  "description": "Collects information from the forms to perform lead scoring.",
+  "type": "craft-plugin",
+  "license": "mit",
+  "support": {
+    "email": "lalonso@tbi.com.mx"
+  },
+  "require": {
+    "php": ">=7.4",
+    "craftcms/cms": "^3.7"
+  },
+  "require-dev": {
+    "craftcms/ecs": "dev-main",
+    "craftcms/phpstan": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "brandindustry\\leadscoringsystem\\": "src/"
+    }
+  },
+  "extra": {
+    "handle": "lead-scoring-system",
+    "name": "Lead Scoring System",
+    "developer": "Brand Industry",
+    "documentationUrl": "",
+    "class": "brandindustry\\leadscoringsystem\\LeadScoringSystem"
+  },
+  "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
+    "phpstan": "phpstan --memory-limit=1G"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "7.4"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
+}

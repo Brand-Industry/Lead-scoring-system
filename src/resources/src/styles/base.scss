@@ -1,0 +1,9 @@
+#systemleads > *,
+#systemleads > ::after,
+#systemleads > ::before {
+  box-sizing: border-box;
+}
+
+#systemleads {
+  padding: 0.5rem;
+}
