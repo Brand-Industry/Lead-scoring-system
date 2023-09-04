@@ -1,8 +1,9 @@
-import { useForm } from '../../hooks';
+import { useForm } from "../../hooks";
 
-import './app.scss';
+import "./app.scss";
 
 export const ListRole = function () {
+  const Delete = `${window.baseAssetsUrl || ""}/img/minus.svg`;
   const { dataRoles, operators, deleteRole, getDataLeads } = useForm();
   const deleteItem = (handle) => () => {
     if (!handle) return;
@@ -12,10 +13,10 @@ export const ListRole = function () {
   if (!dataRoles.length > 0) return;
 
   return (
-    <div className="table-responsive ListRole mt-3">
-      <div className="ListRole__head pb-3 pt-2">
+    <div className="table-responsive ListRole mt-3 mb-4 pb-2">
+      {/* <div className="ListRole__head pb-3 pt-2">
         <h3>Lista de reglas</h3>
-      </div>
+      </div> */}
       <table className="table ListRole__table">
         <thead>
           <tr>
@@ -34,17 +35,24 @@ export const ListRole = function () {
               <th>{i.value}</th>
               <th>{i.points}</th>
               <th scope="row">
-                <button type="button" className="btn btn-danger" onClick={deleteItem(i.field.handle)}>
-                  Eliminar
+                <button
+                  type="button"
+                  className="btn btn-danger btn-delete"
+                  onClick={deleteItem(i.field.handle)}
+                >
+                  <img
+                    src={`${Delete}`}
+                    alt="Delete"
+                    className="img-fluid "
+                    width={20}
+                    height={20}
+                  />
                 </button>
               </th>
             </tr>
           ))}
         </tbody>
       </table>
-      <button type="button" className="my-3 btn btn-primary" onClick={getDataLeads}>
-        Consultar
-      </button>
     </div>
   );
 };

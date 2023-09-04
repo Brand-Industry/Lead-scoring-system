@@ -12,7 +12,10 @@ use craft\base\Plugin;
 use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
 
+
 use yii\base\Event;
+use craft\web\UrlManager;
+use craft\events\RegisterUrlRulesEvent;
 
 
 /**
@@ -26,12 +29,13 @@ class LeadScoringSystem extends Plugin
 {
     public $schemaVersion = '1.0.0';
     public $hasCpSettings = true;
+    public $hasCpSection = true;
     public static $plugin;
 
-    /*public static function instance()*/
-    /*{*/
-    /*return Craft::$app->getPlugins()->getPlugin('craftleadscoringsystem');*/
-    /*}*/
+    public static function instance()
+    {
+        return Craft::$app->getPlugins()->getPlugin('craftleadscoringsystem');
+    }
 
     public function init()
     {
@@ -39,17 +43,31 @@ class LeadScoringSystem extends Plugin
 
         self::$plugin = $this;
         $this->_registerVariables();
-
-        // Defer most setup tasks until Craft is fully initialized
-        /*\Craft::$app->on('beforeInit', function () {*/
-        /*$this->attachEventHandlers();*/
-        /*});*/
+        $this->_registerCpRoutes();
     }
 
 
     public function getPluginName()
     {
         return $this->getSettings()->pluginName;
+    }
+
+    public function getCpNavItem(): ?array
+    {
+        $navItem = parent::getCpNavItem();
+        $navItem = array_merge($navItem, [
+            'subnav' => [
+                "General" => [
+                    'label' => 'Formularios',
+                    'url' => 'lead-scoring-system',
+                ],
+                "consultationHistory" => [
+                    'label' => 'Historial de consultas',
+                    'url' => 'lead-scoring-system/consultation-history',
+                ]
+            ],
+        ]);
+        return $navItem;
     }
 
     public function getSettingsResponse()
@@ -60,6 +78,19 @@ class LeadScoringSystem extends Plugin
     protected function createSettingsModel(): ?Model
     {
         return new Settings();
+    }
+
+
+    private function _registerCpRoutes()
+    {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            $event->rules = array_merge($event->rules, [
+                'lead-scoring-system' => 'lead-scoring-system/lead-system/index',
+                'lead-scoring-system/form/<handle:{handle}>' => 'lead-scoring-system/lead-system/form',
+                'lead-scoring-system/get-submits/submission' => 'lead-scoring-system/get-submits/submission',
+                'lead-scoring-system/form-queries/save-query' => 'lead-scoring-system/form-queries/save-data',
+            ]);
+        });
     }
 
     private function _registerVariables()
@@ -75,11 +106,5 @@ class LeadScoringSystem extends Plugin
     /*'plugin' => $this,*/
     /*'settings' => $this->getSettings(),*/
     /*]);*/
-    /*}*/
-
-    /*private function attachEventHandlers(): void*/
-    /*{*/
-    /*// Register event handlers here ...*/
-    /*// (see https://craftcms.com/docs/3.x/extend/events.html to get started)*/
     /*}*/
 }

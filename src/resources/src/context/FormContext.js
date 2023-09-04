@@ -1,10 +1,11 @@
-import { createContext, useEffect, useState } from 'react';
-import { useForms, useSelectedForm } from '../hooks';
-import { GetLeads } from '../services/Leads';
+import { createContext, useEffect, useState } from "react";
+import { useForms, useSelectedForm } from "../hooks";
+import { GetLeads } from "../services/Leads";
+import { SaveQuery } from "../services/FormQueries";
 
 export const FormContext = createContext({
   forms: [],
-  formActive: '',
+  formActive: "",
   selectedForm: [],
   operators: {},
   setForm: () => {},
@@ -13,11 +14,11 @@ export const FormContext = createContext({
   deleteRole: () => {},
   dataLeads: [],
   getDataLeads: () => {},
-  selectedValue: '',
+  selectedValue: "",
   setSelectedValue: () => {},
-  operatorField: '',
+  operatorField: "",
   setOperatorField: () => {},
-  valueField: '',
+  valueField: "",
   setValueField: () => {},
   pointsField: 1,
   setPointsFields: () => {},
@@ -25,57 +26,56 @@ export const FormContext = createContext({
   loadding: false,
   showResults: false,
   newQuery: () => {},
-  typeFilterDate: '',
-  valueFilterDate: ''
+  typeFilterDate: "",
+  valueFilterDate: "",
 });
 
 export const FormProvider = function (props) {
   const { children } = props;
-  const { getForms } = useForms();
   const { getForm } = useSelectedForm();
-  const [forms, setForms] = useState([]);
-  const [formActive, setFormActive] = useState('');
+  //const [forms, setForms] = useState([]);
+  const [formActive, setFormActive] = useState("");
   const [selectedForm, setSelectedForm] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
-  const [selectedValue, setSelectedValue] = useState('');
-  const [operatorField, setOperatorField] = useState('');
-  const [valueField, setValueField] = useState('');
+  const [selectedValue, setSelectedValue] = useState("");
+  const [operatorField, setOperatorField] = useState("");
+  const [valueField, setValueField] = useState("");
   const [pointsField, setPointsFields] = useState(1);
   const [totalRolesPoints, setTotalRolesPoints] = useState(0);
   const [dataLeads, setDataLeads] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [typeFilterDate, setTypeFilterDate] = useState('');
-  const [valueFilterDate, setValueFilterDate] = useState('');
+  const [typeFilterDate, setTypeFilterDate] = useState("");
+  const [valueFilterDate, setValueFilterDate] = useState("");
 
   const resetElements = () => {
-    setSelectedValue('');
-    setOperatorField('');
-    setValueField('');
+    setSelectedValue("");
+    setOperatorField("");
+    setValueField("");
     setPointsFields(1);
     setDataRoles([]);
     setDataLeads(undefined);
   };
-  const setForm = async function (handle) {
+
+  const setForm = async function () {
+    const handle = window.handleForm || "";
     if (!handle) {
       resetElements();
       return setSelectedForm([]);
     }
-    const dataForm = await getForm(handle);
-    if (!dataForm) return;
-    const { data } = dataForm;
-    if (!data) return;
-    setSelectedForm(data);
+    const dataFields = await getForm(handle);
+    if (!dataFields) return;
+    setSelectedForm(dataFields);
     setFormActive(handle);
     resetElements();
   };
 
   const newQuery = () => {
     setSelectedForm([]);
-    setFormActive('');
+    setFormActive("");
 
     resetElements();
-    setFilterDate('', '');
+    setFilterDate("", "");
     return setShowResults(false);
   };
 
@@ -88,14 +88,16 @@ export const FormProvider = function (props) {
         field: JSON.parse(selectedValue),
         operator: operatorField,
         value: valueField,
-        points: pointsField
-      }
+        points: pointsField,
+      },
     ]);
     setTotalRolesPoints(parseInt(totalRolesPoints) + parseInt(pointsField));
   };
 
   const deleteRole = (handle) => {
-    const indice = dataRoles.findIndex((objeto) => objeto.field.handle === handle);
+    const indice = dataRoles.findIndex(
+      (objeto) => objeto.field.handle === handle
+    );
     if (!indice === -1) return;
     const newData = [...dataRoles];
     const { points } = dataRoles[indice];
@@ -113,18 +115,24 @@ export const FormProvider = function (props) {
     setLoading(true);
     const BodyValues = {
       formHandle: formActive,
-      formData: dataRoles
+      formData: dataRoles,
+      filterDate: {},
     };
 
     if (typeFilterDate && valueFilterDate) {
-      BodyValues['filterDate'] = {
+      BodyValues["filterDate"] = {
         type: typeFilterDate,
-        date: valueFilterDate
+        date: valueFilterDate,
       };
     }
 
-    const response = await GetLeads(BodyValues);
+    // const response = await GetLeads(BodyValues);
+    const response = await SaveQuery(BodyValues);
+    return;
+
     const { data } = response;
+    if (!data) return;
+
     setLoading(false);
     setDataLeads(data);
     setShowResults(true);
@@ -132,22 +140,24 @@ export const FormProvider = function (props) {
 
   const generateDate = function (date) {
     try {
-      if (!date) return '';
-      return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
+      if (!date) return "";
+      return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(
+        -2
+      )}-${("0" + date.getDate()).slice(-2)}`;
     } catch (Exception) {
-      console.warn('Exception in generateDate => ' + Exception);
+      console.warn("Exception in generateDate => " + Exception);
     }
   };
   const setFilterDate = function (type, date) {
     try {
       if (!type || !date) {
-        setTypeFilterDate('');
-        setValueFilterDate('');
+        setTypeFilterDate("");
+        setValueFilterDate("");
         return;
       }
       setTypeFilterDate(type);
 
-      if (type === 'range') {
+      if (type === "range") {
         const [start, end] = date;
         setValueFilterDate(`${generateDate(start)}|${generateDate(end)}`);
         return;
@@ -155,22 +165,21 @@ export const FormProvider = function (props) {
 
       return setValueFilterDate(generateDate(date));
     } catch (Exception) {
-      console.warn('Exception in setFilterDate => ' + Exception);
+      console.warn("Exception in setFilterDate => " + Exception);
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const responseForms = getForms();
-      if (responseForms.length > 0) {
-        setForms(responseForms);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //useEffect(() => {
+  //(async () => {
+  //const responseForms = a getForms();
+  //if (responseForms) {
+  //setForms(responseForms);
+  //}
+  //})();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  //}, []);
 
   const valueContext = {
-    forms: forms,
     setForm,
     selectedForm,
     dataRoles,
@@ -178,16 +187,17 @@ export const FormProvider = function (props) {
     deleteRole,
     formActive,
     operators: {
-      contiene: 'Contiene',
-      'contiene-mm': 'Contiene (no distingue entre mayúsculas y minúsculas)',
-      'no-contiene': 'No contiene',
-      'no-contiene-mm': 'No contiene (no distingue entre mayúsculas y minúsculas)',
-      'mayor-que': 'Mayor que',
-      'menor-que': 'Menor que',
-      'es-igual-a': 'Es igual que',
-      'no-es-igual-a': 'No es igual que',
-      coincide: 'Coincide con la expresión regular',
-      'no-coincide': 'No coincide con la expresión regular'
+      contiene: "Contiene",
+      "contiene-mm": "Contiene (no distingue entre mayúsculas y minúsculas)",
+      "no-contiene": "No contiene",
+      "no-contiene-mm":
+        "No contiene (no distingue entre mayúsculas y minúsculas)",
+      "mayor-que": "Mayor que",
+      "menor-que": "Menor que",
+      "es-igual-a": "Es igual que",
+      "no-es-igual-a": "No es igual que",
+      coincide: "Coincide con la expresión regular",
+      "no-coincide": "No coincide con la expresión regular",
     },
     getDataLeads,
     selectedValue,
@@ -205,8 +215,10 @@ export const FormProvider = function (props) {
     newQuery,
     setFilterDate,
     typeFilterDate,
-    valueFilterDate
+    valueFilterDate,
   };
 
-  return <FormContext.Provider value={valueContext}>{children}</FormContext.Provider>;
+  return (
+    <FormContext.Provider value={valueContext}>{children}</FormContext.Provider>
+  );
 };

@@ -1,9 +1,73 @@
-#systemleads > *,
-#systemleads > ::after,
-#systemleads > ::before {
+#leadSystem > *,
+#leadSystem > ::after,
+#leadSystem > ::before {
   box-sizing: border-box;
 }
 
-#systemleads {
+#leadSystem {
   padding: 0.5rem;
+}
+
+.box-sizing > div,
+.box-sizing section,
+input {
+  box-sizing: border-box;
+}
+
+.react-datepicker-popper {
+  z-index: 99999 !important;
+}
+
+.leadSystem {
+  &__footer {
+    &,
+    &--logo {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      justify-content: center;
+      align-items: flex-end;
+    }
+  }
+  &__footer {
+    &--link {
+      position: relative;
+      display: inline-block;
+      width: 80px;
+      &:hover {
+        .leadSystem__footer--text {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+        .leadSystem__footer--logo {
+          border-radius: 10%;
+          opacity: 1;
+        }
+      }
+    }
+    &--text,
+    &--logo {
+      transition: all 0.3s ease;
+      transition-delay: 0.3s;
+    }
+    &--text {
+      opacity: 0;
+      transform: translateY(10px);
+      position: absolute;
+      left: -100%;
+      bottom: 0%;
+      font-size: 14px;
+      color: #09091a;
+    }
+    &--logo {
+      transition-delay: 0.2s;
+      margin-left: auto;
+      padding: 0.3rem;
+      border-radius: 50%;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      background-color: #09091a;
+    }
+  }
 }

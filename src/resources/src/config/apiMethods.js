@@ -1,7 +1,5 @@
-const { value: csrfToken } = window.dataToken;
 const deafultHeaders = {
-  'Content-Type': 'application/json',
-  'X-CSRF-Token': csrfToken
+  "Content-Type": "application/json",
 };
 
 // Function to make a generic HTTP request
@@ -12,18 +10,20 @@ const request = async function (url, options) {
     if (response.status !== 200) {
       return {
         success: false,
-        error: data?.message || 'Se ha producido un error inténtelo de nuevo más tarde',
-        data: {}
+        error:
+          data?.message ||
+          "Se ha producido un error inténtelo de nuevo más tarde",
+        data: {},
       };
     }
 
     return {
       success: true,
-      error: '',
-      data
+      error: "",
+      data,
     };
   } catch (error) {
-    console.error('Error in request =>', error);
+    console.error("Error in request =>", error);
     throw error;
   }
 };
@@ -31,11 +31,11 @@ const request = async function (url, options) {
 export const post = async function (url, body, headers = {}) {
   try {
     return await request(url, {
-      method: 'POST',
+      method: "POST",
       headers: { ...deafultHeaders, ...headers },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   } catch (Exception) {
-    console.warn('Exception in post => ' + Exception);
+    console.warn("Exception in post => " + Exception);
   }
 };

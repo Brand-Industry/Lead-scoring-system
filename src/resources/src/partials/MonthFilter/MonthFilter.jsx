@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useForm } from '../../hooks';
+import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useForm } from "../../hooks";
 
 export const MonthFilter = function () {
   const { setFilterDate } = useForm();
@@ -9,20 +9,21 @@ export const MonthFilter = function () {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    setFilterDate('month', date);
+    setFilterDate("month", date);
   };
 
   useEffect(() => {
     setSelectedDate(selectedDate.setDate(1));
-    setFilterDate('month', selectedDate);
+    setFilterDate("month", selectedDate);
   }, []);
 
   return (
-    <div>
-      <label className="d-inline-block form-label">Filtro por Mes</label>
-      <div>
-        <DatePicker selected={selectedDate} className="form-control" onChange={handleDateChange} dateFormat="MMMM yyyy" showMonthYearPicker />
-      </div>
-    </div>
+    <DatePicker
+      selected={selectedDate}
+      className="form-control"
+      onChange={handleDateChange}
+      dateFormat="MMMM yyyy"
+      showMonthYearPicker
+    />
   );
 };

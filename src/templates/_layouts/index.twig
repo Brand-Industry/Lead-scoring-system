@@ -1,0 +1,36 @@
+{% extends '_layouts/cp' %}
+
+{% do view.registerAssetBundle("brandindustry\\leadscoringsystem\\assetbundles\\SystemleadsAssets") %}
+
+{% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@brandindustry/leadscoringsystem/web/', true) %}
+
+
+{% set title = pageTitle ?? craft.leadSystem.getPluginName()  %}
+
+
+{% block content %}
+	{% block bodyApp %}{% endblock %}
+	<hr>
+	<div class="leadSystem__footer">
+		<a class="leadSystem__footer--link" href="https://thebrandindustry.com/" rel="noopener noreferrer" target="_black">
+			<p class="m-0 leadSystem__footer--text">
+				Developed by
+				<br>
+				<strong>
+					Brand Industry
+				</strong>
+			</p>
+			<div class="leadSystem__footer--logo">
+				<img width="20" height="20" src=" {{ " #{baseAssetsUrl}/img/logo-icon.svg" }} " alt=" brand industry"/>
+			</div>
+		</a>
+	</div>
+{% endblock %}
+
+
+{% set dataForms %}
+window.baseAssetsUrl =
+{{baseAssetsUrl|json_encode|raw}}
+{% endset %}
+
+{% do view.registerjs(dataForms, POS_HEAD) %}

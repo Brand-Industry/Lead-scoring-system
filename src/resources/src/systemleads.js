@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
 //SCSS
-import './styles/base.scss';
-import './styles/bootstrap.scss';
+// import "./styles/base.scss";
+// import "./styles/bootstrap.scss";
 
-const root = ReactDOM.createRoot(document.getElementById('systemleads'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const ElementRoot = document.querySelector("#leadSystem");
+if (ElementRoot) {
+  const root = ReactDOM.createRoot(ElementRoot);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

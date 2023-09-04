@@ -1,5 +1,5 @@
-import { FormProvider } from './context';
-import { Body } from './components';
+import {FormProvider} from "./context";
+import {Body} from "./components";
 
 const App = function () {
   return (

@@ -1,9 +1,12 @@
-import Accordion from 'react-bootstrap/Accordion';
-import Table from 'react-bootstrap/Table';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import Accordion from "react-bootstrap/Accordion";
+import Table from "react-bootstrap/Table";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
-export const AccordiosResults = function ({ dataSubmissions, totalRolesPoints }) {
+export const AccordiosResults = function ({
+  dataSubmissions,
+  totalRolesPoints,
+}) {
   ChartJS.register(ArcElement, Tooltip, Legend);
   return (
     <Accordion className="pb-5 mb-3">
@@ -12,27 +15,27 @@ export const AccordiosResults = function ({ dataSubmissions, totalRolesPoints })
           labels: i.fields.map((item) => item.value),
           datasets: [
             {
-              label: '# of Points',
+              label: "# of Points",
               data: i.fields.map((item) => item.points),
               backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(255, 159, 64, 0.2)",
               ],
               borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
               ],
-              borderWidth: 1
-            }
-          ]
+              borderWidth: 1,
+            },
+          ],
         };
         const porcentaje = (i.totalPoints / totalRolesPoints) * 100;
         return (

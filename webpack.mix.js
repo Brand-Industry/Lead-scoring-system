@@ -1,11 +1,23 @@
-const mix = require('laravel-mix');
-require('laravel-mix-purgecss');
+const mix = require("laravel-mix");
+require("laravel-mix-purgecss");
 
-const basePath = './src/resources';
-mix.js(`${basePath}/src/systemleads.js`, `${basePath}/dist/js`).react().setPublicPath(basePath);
+const basePath = "./src/resources";
+
+// mix.webpackConfig({
+//   stats: {
+//     children: true,
+//   },
+// });
+
+mix
+  .sass(`${basePath}/src/styles/app.scss`, "./src/web/css/")
+  .js(`${basePath}/src/systemleads.js`, `./src/web/js`)
+  .react();
 if (mix.inProduction()) {
   mix.purgeCss({
     content: [`${basePath}/**/*.jsx`],
-    safelist: { deep: [/accordion*/, /table*/, /collapse/, /show/, /react-datepicker*/] }
+    safelist: {
+      deep: [/accordion*/, /table*/, /collapse/, /show/, /react-datepicker*/],
+    },
   });
 }

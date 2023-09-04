@@ -1,18 +1,26 @@
 <?php
 
-namespace tbi\systemleads\controllers;
+namespace brandindustry\leadscoringsystem\controllers;
 
 use craft\web\Controller;
-use craft\helpers\UrlHelper;
 use Exception;
 use yii\web\Response;
 use Solspace\Freeform\Elements\Submission;
-use Solspace\Freeform\Elements\Submission as FreeformSubmission;
+
+use brandindustry\leadscoringsystem\services\SubmissionService;
 
 
 class GetSubmitsController extends Controller
 {
-    public function actionGetSubmission(): Response
+    private $submissionService;
+
+    public function __construct(string $id, $module, SubmissionService $submissionService, array $config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->submissionService = $submissionService;
+    }
+
+    public function actionSubmission(): Response
     {
         try {
             $request = \Craft::$app->getRequest();
@@ -57,10 +65,19 @@ class GetSubmitsController extends Controller
                     "data" => [],
                 ]);
             }
-            $Response =  getData($query, $formData);
+
+            $responseData = $this->submissionService->getData($query);
+            if (empty($responseData)) {
+                return $this->asJson([
+                    "code" => 200,
+                    "data" => [],
+                ]);
+            }
+
+            $FieldsValidations = $this->submissionService->fieldsValidations($responseData, $formData);
             return $this->asJson([
                 "code" => 200,
-                "data" => $Response,
+                "data" => $FieldsValidations,
             ]);
         } catch (Exception $e) {
             return $this->asJson([
@@ -70,118 +87,4 @@ class GetSubmitsController extends Controller
             ]);
         }
     }
-}
-
-
-function getData($query, $formData)
-{
-    $Submissions = [];
-    foreach ($query as $submission) {
-        $fieldsSubmissions = [];
-        foreach ($submission as $field) {
-            $value = $submission[$field->getHandle()]->getValue();
-            if (is_array($value)) {
-                $getValue = reset($value);
-                $value = !$getValue ? "" : $getValue;
-            }
-            $fieldsSubmissions[$field->getHandle()] = ["label" => $field->getLabel(), "value" => $value];
-        }
-        $Submissions["item-" . $submission->getId()] = [
-            "title"  => $submission->title,
-            "url" => UrlHelper::url('') . "admin/freeform/submissions/" . $submission->getId(),
-            "fields" => $fieldsSubmissions,
-            "dateCreate" => $submission->dateCreated
-
-        ];
-    }
-
-    $Response =  fieldsValidations($Submissions, $formData);
-
-    return $Response;
-}
-
-
-function fieldsValidations($data, $conditionArray)
-{
-    $arrayElements = [];
-    foreach ($conditionArray as $condicion) {
-        $field = $condicion['field']['handle'];
-        $operator = $condicion['operator'];
-        $value = $condicion['value'];
-        $points = (int)$condicion['points'];
-
-        foreach ($data as $key => $itemData) {
-            $fields = $itemData["fields"];
-            if (array_key_exists($field, $fields)) {
-                $item = $fields[$field];
-                $itemValue = $item["value"];
-                $isLead = false;
-                switch ($operator) {
-                    case "contiene":
-                        $isLead = stripos($itemValue, $value) !== false;
-                        break;
-                    case "contiene-mm":
-                        $isLead = strpos($itemValue, $value) !== false;
-                        break;
-                    case 'no-contiene':
-                        $isLead = stripos($itemValue, $value) === false;
-                        break;
-                    case 'no-contiene-mm':
-                        $isLead = strpos($itemValue, $value) === false;
-                        break;
-                    case 'mayor-que':
-                        $isLead = $value > $itemValue;
-                        break;
-                    case 'menor-que':
-                        $isLead = $value < $itemValue;
-                        break;
-                    case 'es-igual-a':
-                        $isLead = $value === $itemValue;
-                        break;
-                    case 'no-es-igual-a':
-                        $isLead = $value !== $itemValue;
-                        break;
-                    case 'coincide':
-                        $isLead = preg_match('/' . $value . '/', $itemValue) === 1;
-                        break;
-                    case 'no-coincide':
-                        $isLead = preg_match('/' . $value . '/', $itemValue) !== 1;
-                        break;
-                    default:
-                        $isLead = false;
-                        break;
-                }
-
-                if ($isLead) {
-                    $newDataCreate = [
-                        "handle" => $field,
-                        "label" => $item["label"],
-                        "operator" => $operator,
-                        "value" => $value,
-                        "valueSubmission" => $itemValue,
-                        "points" =>  $points,
-                        "isLead" => $isLead,
-                    ];
-
-                    if (array_key_exists($key, $arrayElements)) {
-                        $element = $arrayElements[$key];
-                        $fields = $element["fields"];
-                        array_push($fields, $newDataCreate);
-                        $arrayElements[$key]["fields"] = $fields;
-                        $arrayElements[$key]["totalPoints"] += (int)$points;
-                    } else {
-                        $arrayElements[$key] = [
-                            "title" => $itemData["title"],
-                            "url" => $itemData["url"],
-                            "totalPoints" => $points,
-                            "fields" => [$newDataCreate],
-                            "date" => $itemData["dateCreate"]->format('Y-m-d')
-                        ];
-                    }
-                }
-            }
-        }
-    }
-
-    return $arrayElements;
 }

@@ -4,6 +4,18 @@
   }
   .btn {
     height: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    &-delete {
+      &:hover {
+        background-color: var(--bs-btn-bg) !important;
+      }
+      img {
+        filter: invert(1);
+      }
+    }
   }
   &__head {
     display: flex;

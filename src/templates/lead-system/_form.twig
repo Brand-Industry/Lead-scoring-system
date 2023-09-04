@@ -1,0 +1,26 @@
+{% extends 'lead-scoring-system/_layouts' %}
+
+{% set dataFields = dataForm ?? [] %}
+{% set handleForm = handleForm ?? "" %}
+
+{% block bodyApp %}
+	<div id="leadSystem"></div>
+{% endblock %}
+
+{% set dataToken = {
+	name: craft.app.config.general.csrfTokenName,
+	value: craft.app.request.csrfToken
+} %}
+
+{% set dataForms %}
+window.dataToken =
+{{ dataToken|json_encode|raw }}
+window.adminUrl =
+{{ siteUrl(craft.app.config.general.cpTrigger ?? "admin") |json_encode|raw }}
+window.handleForm =
+{{ handleForm|json_encode|raw }}
+window.dataFields =
+{{ dataFields|json_encode|raw }}
+{% endset %}
+
+{% do view.registerjs(dataForms, POS_HEAD) %}

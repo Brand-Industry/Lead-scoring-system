@@ -1,33 +1,28 @@
 <?php
 
-namespace tbi\systemleads\controllers;
+namespace brandindustry\leadscoringsystem\controllers;
 
 use craft\web\Controller;
 use yii\web\Response;
 
 use Solspace\Freeform\Freeform;
 
-class GetFormController extends Controller
+class LeadSystemController extends Controller
 {
-
-
-    public function actionGetData(): Response
+    public function actionIndex(): Response
     {
-        $request = \Craft::$app->getRequest();
-        $handle = $request->getBodyParam('formHandle') ?? null;
-        if (empty($handle)) {
-            return $this->asJson([
-                "message" => "The data provided is incomplete",
-                "code" => 403
-            ]);
-        }
+        return $this->renderTemplate('lead-scoring-system/lead-system/index', []);
+    }
+
+    public function actionForm(string $handle): Response
+    {
         $form = Freeform::getInstance()->forms->getFormByHandle($handle) ?? null;
         if (empty($form)) {
-            return $this->asJson([
-                "message" => "Check the parameters the form does not exist",
-                "code" => 200
+            return $this->renderTemplate("lead-scoring-system/lead-system/_form.twig", [
+                'notFoundForm' => true,
             ]);
         }
+
         $fields = $form->getLayout()->getFields();
         $dataFields = [];
         foreach ($fields as $field) {
@@ -40,10 +35,10 @@ class GetFormController extends Controller
                 ];
             }
         }
-
-        return $this->asJson([
-            "code" => 200,
-            "data" => $dataFields
+        return $this->renderTemplate("lead-scoring-system/lead-system/_form.twig", [
+            "dataForm" => $dataFields,
+            "handleForm" => $handle,
+            "pageTitle" => "Formulario: " . $form->name
         ]);
     }
 }
