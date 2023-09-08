@@ -15,6 +15,7 @@ class FormQueriesService extends Component
     if ($model->validate()) {
       $record = new LeadScoringSystemRecord();
       $record->formHandle = $model->formHandle;
+      $record->formName = $model->formName;
       $record->formData = $model->formData;
       $record->filterDate = $model->filterDate;
 

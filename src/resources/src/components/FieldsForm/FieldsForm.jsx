@@ -22,7 +22,7 @@ export const FieldsForm = function () {
     pointsField,
     setPointsFields,
     totalRolesPoints,
-    getDataLeads,
+    getResults,
     dataRoles,
     setForm,
   } = useForm();
@@ -188,7 +188,7 @@ export const FieldsForm = function () {
           <button
             type="button"
             className="btn-search btn btn-primary"
-            onClick={getDataLeads}
+            onClick={getResults}
           >
             <img
               src={Search}

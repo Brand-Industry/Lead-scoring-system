@@ -57,13 +57,13 @@ class LeadScoringSystem extends Plugin
         $navItem = parent::getCpNavItem();
         $navItem = array_merge($navItem, [
             'subnav' => [
-                "General" => [
+                "forms" => [
                     'label' => 'Formularios',
-                    'url' => 'lead-scoring-system',
+                    'url' => 'lead-scoring-system/forms',
                 ],
-                "consultationHistory" => [
+                "queries" => [
                     'label' => 'Historial de consultas',
-                    'url' => 'lead-scoring-system/consultation-history',
+                    'url' => 'lead-scoring-system/queries',
                 ]
             ],
         ]);
@@ -85,10 +85,15 @@ class LeadScoringSystem extends Plugin
     {
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
-                'lead-scoring-system' => 'lead-scoring-system/lead-system/index',
+                'lead-scoring-system' => 'lead-scoring-system/lead-system/default-view',
+                'lead-scoring-system/forms' => 'lead-scoring-system/lead-system/forms',
                 'lead-scoring-system/form/<handle:{handle}>' => 'lead-scoring-system/lead-system/form',
+                'lead-scoring-system/leads/<uid:{uid}>' => 'lead-scoring-system/lead-system/get-leads',
                 'lead-scoring-system/get-submits/submission' => 'lead-scoring-system/get-submits/submission',
+                'lead-scoring-system/queries' => 'lead-scoring-system/form-queries/index',
                 'lead-scoring-system/form-queries/save-query' => 'lead-scoring-system/form-queries/save-data',
+                'lead-scoring-system/queries/get-data' => 'lead-scoring-system/form-queries/get-data',
+                'lead-scoring-system/queries/delete' => 'lead-scoring-system/form-queries/delete-item',
             ]);
         });
     }

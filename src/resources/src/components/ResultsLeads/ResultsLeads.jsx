@@ -4,7 +4,6 @@ import { useForm } from "../../hooks";
 import { useState } from "react";
 import {
   ChartResults,
-  AccordiosResults,
   GenereteMessageDate,
   LoadingResults,
   NotFoundResults,
@@ -12,7 +11,7 @@ import {
 } from "../../partials";
 import { TableResults } from "../TableResults";
 
-export const ResultsLeads = function () {
+export const ResultsLeads = function ({ showBtnNewLeads = true }) {
   const {
     dataLeads,
     loading,
@@ -23,6 +22,12 @@ export const ResultsLeads = function () {
   } = useForm();
   const [selectedDate, setSelectedDate] = useState(false);
 
+  let UrlNewQuery = "";
+  if (!showBtnNewLeads) {
+    UrlNewQuery = `${window.adminUrl || ""}/lead-scoring-system/form/${
+      window.data?.formHandle || ""
+    }`;
+  }
   const handleRangeChange = (range) => {
     setSelectedRange(range);
   };
@@ -33,7 +38,10 @@ export const ResultsLeads = function () {
   };
 
   const dataLeads_Obj = Object.values(dataLeads);
-  if (dataLeads_Obj.length === 0) return <NotFoundResults showBtn={true} />;
+  if (dataLeads_Obj.length === 0)
+    return (
+      <NotFoundResults showBtn={showBtnNewLeads} UrlNewQuery={UrlNewQuery} />
+    );
 
   if (loading) return <LoadingResults />;
 
@@ -70,12 +78,21 @@ export const ResultsLeads = function () {
     <div className="ResultsLeads mt-2">
       <div className="ResultsLeads__headTop pb-4">
         <h2 className="ResultsLeads__title py-3 mb-0">Resultados de Leads</h2>
-        <button
-          className="newQuery btn btn-info ResultsLeads__btn"
-          onClick={newQuery}
-        >
-          Nueva consulta
-        </button>
+        {showBtnNewLeads ? (
+          <button
+            className="newQuery btn btn-info ResultsLeads__btn"
+            onClick={newQuery}
+          >
+            Nueva consulta
+          </button>
+        ) : (
+          <a
+            href={UrlNewQuery}
+            className="newQuery btn btn-info ResultsLeads__btn"
+          >
+            Nueva consulta
+          </a>
+        )}
       </div>
       <div
         className={`pt-4 pb-3 d-flex justify-content-between align-items-center flex-wrap`}
@@ -108,11 +125,6 @@ export const ResultsLeads = function () {
             dataSubmissions={dataSubmissions}
             totalRolesPoints={totalRolesPoints}
           />
-
-          {/* <AccordiosResults
-            dataSubmissions={dataSubmissions}
-            totalRolesPoints={totalRolesPoints}
-          /> */}
         </>
       )}
     </div>

@@ -11,12 +11,14 @@ class FormQueriesModel extends Model
     public $formHandle;
     public $formData;
     public $filterDate;
+    public $formName;
 
     public function rules()
     {
         return [
-            [['formHandle', 'formData'], 'required'],
+            [['formHandle', 'formData', 'formName'], 'required'],
             ['formHandle', 'string', 'max' => 255],
+            ['formName', 'string', 'max' => 150],
             ['formData', 'validateJson'],
             ['filterDate', 'validateJson'],
         ];

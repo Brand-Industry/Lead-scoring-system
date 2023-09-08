@@ -1,0 +1,13 @@
+.tableQueries {
+  &__message {
+    font-size: 20px;
+  }
+  &__pagination {
+    .page-item.active {
+      .page-link {
+        background-color: #0d6efd;
+        color: #fff;
+      }
+    }
+  }
+}

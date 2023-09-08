@@ -1,6 +1,5 @@
 import { GenereteFormatDate } from "../../partials";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import { useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
@@ -56,13 +55,33 @@ export const TableResults = function ({ dataSubmissions, totalRolesPoints }) {
         show={showModal}
         centered
         size="lg"
-        className="tableResults__modal"
+        className="leadSystem__modal"
         onHide={() => setShowModal(false)}
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>{modalData.title}</Modal.Title>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowModal(false)}
+          >
+            Cerrar
+          </button>
         </Modal.Header>
         <Modal.Body className="py-4">
+          <div className="row gy-3 my-3 box-sizing px-3">
+            <div className="col-12 col-md-6 text-center">
+              <p>
+                <strong>Fecha de Creación: </strong>
+                {GenereteFormatDate(modalData.date)}{" "}
+              </p>
+            </div>
+            <div className="col-12 col-md-6 text-center">
+              <p>
+                <strong>Porcentaje: </strong>
+                {((modalData.totalPoints / totalRolesPoints) * 100).toFixed()} %
+              </p>
+            </div>
+          </div>
           {Object.keys(modalData).length === 0 ? null : (
             <Doughnut
               data={{
@@ -95,20 +114,6 @@ export const TableResults = function ({ dataSubmissions, totalRolesPoints }) {
               height={300}
             />
           )}
-          <div className="row gy-3 my-3 box-sizing px-3">
-            <div className="col-12 col-md-6 text-center">
-              <p>
-                <strong>Fecha de Creación: </strong>
-                {GenereteFormatDate(modalData.date)}{" "}
-              </p>
-            </div>
-            <div className="col-12 col-md-6 text-center">
-              <p>
-                <strong>Porcentaje: </strong>
-                {((modalData.totalPoints / totalRolesPoints) * 100).toFixed()} %
-              </p>
-            </div>
-          </div>
         </Modal.Body>
         <Modal.Footer className="justify-content-between">
           <a
@@ -119,9 +124,6 @@ export const TableResults = function ({ dataSubmissions, totalRolesPoints }) {
           >
             Ver formulario
           </a>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cerrar
-          </Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -75,9 +75,18 @@ class GetSubmitsController extends Controller
             }
 
             $FieldsValidations = $this->submissionService->fieldsValidations($responseData, $formData);
+
+            $page = craft()->request->getParam('page', 1);
+            $perPage = craft()->request->getParam('perPage', 10);
+
+            $startIndex = ($page - 1) * $perPage;
+            $endIndex = $startIndex + $perPage;
+
+            $paginatedResults = array_slice($FieldsValidations, $startIndex, $perPage);
+
             return $this->asJson([
                 "code" => 200,
-                "data" => $FieldsValidations,
+                "data" => $paginatedResults,
             ]);
         } catch (Exception $e) {
             return $this->asJson([

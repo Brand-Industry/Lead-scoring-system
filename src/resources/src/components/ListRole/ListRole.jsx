@@ -4,7 +4,7 @@ import "./app.scss";
 
 export const ListRole = function () {
   const Delete = `${window.baseAssetsUrl || ""}/img/minus.svg`;
-  const { dataRoles, operators, deleteRole, getDataLeads } = useForm();
+  const { dataRoles, operators, deleteRole } = useForm();
   const deleteItem = (handle) => () => {
     if (!handle) return;
     deleteRole(handle);

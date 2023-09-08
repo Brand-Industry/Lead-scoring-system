@@ -1,14 +1,36 @@
-//import { useEffect, useRef } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export const GenereteFormatDate = function (date) {
   try {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    if (!date) return "";
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
   } catch (Exception) {
-    console.log('Exception in GenereteFormatDate => ' + Exception);
+    console.log("Exception in GenereteFormatDate => " + Exception);
   }
 };
 export const getRandomColor = function () {
@@ -21,25 +43,33 @@ export const getRandomColor = function () {
 export const ChartResults = ({ data }) => {
   if (data.length === 0) return;
 
-  ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+  );
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
-      }
-    }
+        position: "top",
+      },
+    },
   };
   const chartData = {
     labels: data.map((item) => GenereteFormatDate(item.date)),
     datasets: [
       {
-        label: 'Total Points',
+        label: "Total Points",
         data: data.map((item) => item.totalPoints),
         borderColor: data.map((item) => getRandomColor()),
-        fill: false
-      }
-    ]
+        fill: false,
+      },
+    ],
   };
 
   return <Line options={options} data={chartData} />;

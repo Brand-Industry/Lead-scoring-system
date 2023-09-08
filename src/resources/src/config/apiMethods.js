@@ -39,3 +39,26 @@ export const post = async function (url, body, headers = {}) {
     console.warn("Exception in post => " + Exception);
   }
 };
+
+export const get = async function (url, headers = {}) {
+  try {
+    return await request(url, {
+      method: "GET",
+      headers: { ...deafultHeaders, ...headers },
+    });
+  } catch (Exception) {
+    console.warn("Exception in get => " + Exception);
+  }
+};
+
+export const del = async function (url, body, headers = {}) {
+  try {
+    return await request(url, {
+      method: "DELETE",
+      headers: { ...deafultHeaders, ...headers },
+      body: JSON.stringify(body),
+    });
+  } catch (Exception) {
+    console.warn("Exception in del => " + Exception);
+  }
+};

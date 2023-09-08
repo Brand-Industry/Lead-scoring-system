@@ -1,0 +1,17 @@
+{% extends 'lead-scoring-system/_layouts' %}
+
+{% set crumbs = [
+    { label: craft.leadSystem.getPluginName() , url: url("lead-scoring-system/forms") },
+    { label: "Histroial de consultas", url: "#"},
+] %}
+
+{% block bodyApp %}
+	<div id="leadSystem"></div>
+{% endblock %}
+
+{% set dataForms %}
+window.sectionPage =
+{{ 'listQueries'|json_encode|raw }};
+{% endset %}
+
+{% do view.registerjs(dataForms, POS_HEAD) %}

@@ -5,3 +5,5 @@ export * from "./ResultsLeads";
 export * from "./Body";
 export * from "./DateFilter";
 export * from "./TableResults";
+export * from "./TableQueries";
+export * from "./BodyLeads";

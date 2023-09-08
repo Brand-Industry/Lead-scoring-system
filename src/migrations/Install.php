@@ -38,6 +38,7 @@ class Install extends Migration
       'uid' => $this->uid(),
       'dateCreated' => $this->dateTime()->notNull(),
       'dateUpdated' => $this->dateTime()->notNull(),
+      'formName' => $this->string()->notNull(),
       'formHandle' => $this->string()->notNull(),
       'formData' => $this->json()->notNull(),
       'filterDate' => $this->json(),

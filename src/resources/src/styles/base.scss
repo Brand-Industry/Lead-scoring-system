@@ -19,6 +19,47 @@ input {
 }
 
 .leadSystem {
+  &__table {
+    .btn {
+      height: auto;
+      &-info {
+        color: #fff;
+      }
+    }
+    &--loading {
+      .itemLoading {
+        animation-name: loadingTable;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        &__content {
+          min-height: 50px;
+        }
+      }
+    }
+  }
+  &__modal {
+    background-color: transparent !important;
+    width: 100% !important;
+    height: 100% !important;
+    .btn {
+      height: auto;
+    }
+    .modal-title {
+      font-size: 17px;
+    }
+    .modal-body {
+      canvas {
+        margin: 0 auto;
+        max-width: 350px;
+        max-height: 350px;
+      }
+      font-size: 16px;
+    }
+    &.modal:not(.fitted):not(.fullscreen) {
+      min-width: auto !important;
+      min-height: auto !important;
+    }
+  }
   &__footer {
     &,
     &--logo {
@@ -69,5 +110,35 @@ input {
       height: 35px;
       background-color: #09091a;
     }
+  }
+}
+// @keyframes loadingTable {
+//   0% {
+//     opacity: 0%;
+//   }
+//   100% {
+//     opacity: 100%;
+//   }
+// }
+
+@keyframes loadingTable {
+  0% {
+    background: #ececec;
+  }
+
+  30% {
+    background: #f7f7f7;
+  }
+
+  50% {
+    background: #ececec;
+  }
+
+  80% {
+    background: #f7f7f7;
+  }
+
+  100% {
+    background: #ececec;
   }
 }

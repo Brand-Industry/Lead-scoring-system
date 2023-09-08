@@ -28,6 +28,9 @@ export const FormContext = createContext({
   newQuery: () => {},
   typeFilterDate: "",
   valueFilterDate: "",
+  sectionPage: "",
+  setSectionPage: () => {},
+  getResults: () => {},
 });
 
 export const FormProvider = function (props) {
@@ -35,6 +38,7 @@ export const FormProvider = function (props) {
   const { getForm } = useSelectedForm();
   //const [forms, setForms] = useState([]);
   const [formActive, setFormActive] = useState("");
+  const [formName, setFormName] = useState("");
   const [selectedForm, setSelectedForm] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
@@ -47,6 +51,7 @@ export const FormProvider = function (props) {
   const [showResults, setShowResults] = useState(false);
   const [typeFilterDate, setTypeFilterDate] = useState("");
   const [valueFilterDate, setValueFilterDate] = useState("");
+  const [sectionPage, setSectionPage] = useState("");
 
   const resetElements = () => {
     setSelectedValue("");
@@ -58,7 +63,8 @@ export const FormProvider = function (props) {
   };
 
   const setForm = async function () {
-    const handle = window.handleForm || "";
+    const handle = window.formHandle || null;
+    const formName = window.formName || "";
     if (!handle) {
       resetElements();
       return setSelectedForm([]);
@@ -67,6 +73,7 @@ export const FormProvider = function (props) {
     if (!dataFields) return;
     setSelectedForm(dataFields);
     setFormActive(handle);
+    setFormName(formName);
     resetElements();
   };
 
@@ -109,30 +116,49 @@ export const FormProvider = function (props) {
     setDataRoles(newData);
   };
 
-  const getDataLeads = async () => {
-    if (!dataRoles.length > 0) return;
+  const getResults = async () => {
+    await getDataLeads(
+      formActive,
+      dataRoles,
+      formName,
+      typeFilterDate,
+      valueFilterDate
+    );
+  };
+
+  const getDataLeads = async (
+    form,
+    roles,
+    fName,
+    tfilterDate,
+    vfilterDate,
+    isSaved = true
+  ) => {
+    if (!roles.length > 0) return;
     setDataLeads(undefined);
     setLoading(true);
+
     const BodyValues = {
-      formHandle: formActive,
-      formData: dataRoles,
+      formHandle: form,
+      formData: roles,
       filterDate: {},
+      formName: fName,
     };
 
-    if (typeFilterDate && valueFilterDate) {
+    if (tfilterDate && vfilterDate) {
       BodyValues["filterDate"] = {
-        type: typeFilterDate,
-        date: valueFilterDate,
+        type: tfilterDate,
+        date: vfilterDate,
       };
     }
 
-    // const response = await GetLeads(BodyValues);
-    const response = await SaveQuery(BodyValues);
-    return;
-
-    const { data } = response;
+    const responseLeads = await GetLeads(BodyValues);
+    const { data } = responseLeads;
     if (!data) return;
-
+    if (isSaved) {
+      const { success, message } = await SaveQuery(BodyValues);
+      if (!success) console.warn(message);
+    }
     setLoading(false);
     setDataLeads(data);
     setShowResults(true);
@@ -216,6 +242,10 @@ export const FormProvider = function (props) {
     setFilterDate,
     typeFilterDate,
     valueFilterDate,
+    setSectionPage,
+    sectionPage,
+    getResults,
+    setTotalRolesPoints,
   };
 
   return (

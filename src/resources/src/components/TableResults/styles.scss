@@ -5,29 +5,7 @@
     }
   }
   &__items {
+    cursor: pointer;
     font-size: 16px;
-  }
-  &__modal {
-    background-color: transparent !important;
-    width: 100% !important;
-    height: 100% !important;
-    .btn {
-      height: auto;
-    }
-    .modal-title {
-      font-size: 17px;
-    }
-    .modal-body {
-      canvas {
-        margin: 0 auto;
-        max-width: 350px;
-        max-height: 350px;
-      }
-      font-size: 16px;
-    }
-    &.modal:not(.fitted):not(.fullscreen) {
-      min-width: auto !important;
-      min-height: auto !important;
-    }
   }
 }
