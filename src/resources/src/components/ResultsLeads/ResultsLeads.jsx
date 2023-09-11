@@ -37,23 +37,35 @@ export const ResultsLeads = function ({ showBtnNewLeads = true }) {
     setSelectedDate(true);
   };
 
-  const dataLeads_Obj = Object.values(dataLeads);
-  if (dataLeads_Obj.length === 0)
+  // const dataLeads_Obj = Object.values(totalLeads);
+  const dataLeadsArray = Object.values(dataLeads);
+
+  if (dataLeadsArray.length === 0)
     return (
       <NotFoundResults showBtn={showBtnNewLeads} UrlNewQuery={UrlNewQuery} />
     );
 
   if (loading) return <LoadingResults />;
 
-  const { arrayModified, arrayDatesOnly } = dataLeads_Obj.reduce(
-    (acc, i) => {
-      const date = new Date(i.date + "T00:00:00");
-      acc.arrayModified.push({ ...i, date });
-      acc.arrayDatesOnly.push(date);
-      return acc;
-    },
-    { arrayModified: [], arrayDatesOnly: [] }
-  );
+  // const { arrayModified } = dataLeadsArray.reduce(
+  //   (acc, i) => {
+  //     const date = new Date(i.date + "T00:00:00");
+  //     acc.arrayModified.push({ ...i, date });
+  //     return acc;
+  //   },
+  //   { arrayModified: [] }
+  // );
+
+  const arrayModified = dataLeadsArray.map((i) => ({
+    ...i,
+    date: new Date(i.date),
+  }));
+
+  // const allDataSubmissions = dataLeads_Obj.map((i) => ({
+  //   ...i,
+  //   date: new Date(i.date),
+  // }));
+
   arrayModified.sort((a, b) => b.date - a.date);
 
   const showDatePicker = !typeFilterDate && !valueFilterDate;

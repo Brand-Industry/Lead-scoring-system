@@ -11,7 +11,7 @@
     )
 %}
 
-{% set adminUrl = siteUrl(craft.app.config.general.cpTrigger ?? 'admin') %}
+	{% set adminUrl = siteUrl(craft.app.config.general.cpTrigger ?? 'admin') %}
 
 {% set title = pageTitle ?? craft.leadSystem.getPluginName() %}
 

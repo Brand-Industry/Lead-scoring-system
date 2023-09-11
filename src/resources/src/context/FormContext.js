@@ -38,7 +38,7 @@ export const FormProvider = function (props) {
   const { getForm } = useSelectedForm();
   //const [forms, setForms] = useState([]);
   const [formActive, setFormActive] = useState("");
-  const [formName, setFormName] = useState("");
+  const [fName, setFormName] = useState("");
   const [selectedForm, setSelectedForm] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
@@ -47,11 +47,15 @@ export const FormProvider = function (props) {
   const [pointsField, setPointsFields] = useState(1);
   const [totalRolesPoints, setTotalRolesPoints] = useState(0);
   const [dataLeads, setDataLeads] = useState(undefined);
+  // const [totalLeads, setTotalLeads] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [typeFilterDate, setTypeFilterDate] = useState("");
   const [valueFilterDate, setValueFilterDate] = useState("");
   const [sectionPage, setSectionPage] = useState("");
+  // const [perPageResults, setPerPageResults] = useState(10);
+  // const [pageResults, setPageResults] = useState(1);
+  // const [totalPagesResults, setTotalPagesResults] = useState(0);
 
   const resetElements = () => {
     setSelectedValue("");
@@ -116,15 +120,41 @@ export const FormProvider = function (props) {
     setDataRoles(newData);
   };
 
+  // const getResults = async (paramPerPage = 10, paramPage = 1) => {
   const getResults = async () => {
+    const data = window.data || {};
+    if (Object.keys(data).length === 0) {
+      return await getDataLeads(
+        formActive,
+        dataRoles,
+        fName,
+        typeFilterDate,
+        valueFilterDate
+      );
+    }
+    // paramPerPage,
+    // paramPage
+    const { filterDate, formData, formHandle, formName } = data;
+    const fDateJson = JSON.parse(filterDate);
+    const fFormdataJson = JSON.parse(formData);
+    const totalPoints = fFormdataJson.reduce((acc, obj) => acc + obj.points, 0);
+
+    await setTotalRolesPoints(totalPoints);
     await getDataLeads(
-      formActive,
-      dataRoles,
+      formHandle,
+      fFormdataJson,
       formName,
-      typeFilterDate,
-      valueFilterDate
+      fDateJson.type || "",
+      fDateJson.date || "",
+      false
     );
   };
+  // paramPage,
+  // paramPerPage
+  // const setPaginationResults = async ({ page, totalPages }) => {
+  //   setPageResults(page || 1);
+  //   setTotalPagesResults(totalPages || 1);
+  // };
 
   const getDataLeads = async (
     form,
@@ -134,6 +164,8 @@ export const FormProvider = function (props) {
     vfilterDate,
     isSaved = true
   ) => {
+    // p_page = 1,
+    // p_perPage = 10
     if (!roles.length > 0) return;
     setDataLeads(undefined);
     setLoading(true);
@@ -144,6 +176,9 @@ export const FormProvider = function (props) {
       filterDate: {},
       formName: fName,
     };
+    // page: p_page,
+    // perPage: p_perPage,
+    // resultsAll: false,
 
     if (tfilterDate && vfilterDate) {
       BodyValues["filterDate"] = {
@@ -152,15 +187,24 @@ export const FormProvider = function (props) {
       };
     }
 
+    // if (totalLeads === undefined) {
+    //   BodyValues.resultsAll = true;
+    // }
+
     const responseLeads = await GetLeads(BodyValues);
     const { data } = responseLeads;
+    // const { data, pagination} = responseLeads;
     if (!data) return;
+    setLoading(false);
+    // await setPaginationResults(pagination);
     if (isSaved) {
       const { success, message } = await SaveQuery(BodyValues);
       if (!success) console.warn(message);
     }
-    setLoading(false);
     setDataLeads(data);
+    // if (totalLeads === undefined) {
+    //   setTotalLeads(data.allItems);
+    // }
     setShowResults(true);
   };
 
@@ -245,8 +289,13 @@ export const FormProvider = function (props) {
     setSectionPage,
     sectionPage,
     getResults,
-    setTotalRolesPoints,
   };
+  // setPerPageResults,
+  // perPageResults,
+  // pageResults,
+  // setPageResults,
+  // totalPagesResults,
+  // totalLeads,
 
   return (
     <FormContext.Provider value={valueContext}>{children}</FormContext.Provider>

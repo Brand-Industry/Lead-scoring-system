@@ -27,7 +27,9 @@ class GetSubmitsController extends Controller
             $formHandle = $request->getBodyParam('formHandle') ?? null;
             $formData = $request->getBodyParam('formData') ?? null;
             $filterDate = $request->getBodyParam('filterDate') ?? null;
-
+            $page = $request->getBodyParam('page', 1) ?? null;
+            $perPage = $request->getBodyParam('perPage', 10) ?? null;
+            $allResults = $request->getBodyParam('resultsAll', false) ?? null;
             if (empty($formHandle) || empty($formData)) {
                 return $this->asJson([
                     "message" => "The data provided is incomplete",
@@ -75,18 +77,30 @@ class GetSubmitsController extends Controller
             }
 
             $FieldsValidations = $this->submissionService->fieldsValidations($responseData, $formData);
+            // $totalResults = count($FieldsValidations);
+            // $startIndex = ($page - 1) * $perPage;
+            // $endIndex = $startIndex + $perPage;
 
-            $page = craft()->request->getParam('page', 1);
-            $perPage = craft()->request->getParam('perPage', 10);
+            // $paginatedResults = array_slice($FieldsValidations, $startIndex, $perPage);
+            // $totalPages = ceil($totalResults / $perPage);
 
-            $startIndex = ($page - 1) * $perPage;
-            $endIndex = $startIndex + $perPage;
+            // return $this->asJson([
+            //     "code" => 200,
+            //     "data" => [
+            //         "items" => $paginatedResults,
+            //         "allItems" => $allResults ? $FieldsValidations : [],
 
-            $paginatedResults = array_slice($FieldsValidations, $startIndex, $perPage);
+            //     ],
+            //     "pagination" => [
+            //         "total" => $totalResults,
+            //         "totalPages" => $totalPages,
+            //         "page" => $page
 
+            //     ]
+            // ]);
             return $this->asJson([
                 "code" => 200,
-                "data" => $paginatedResults,
+                "data" => $FieldsValidations,
             ]);
         } catch (Exception $e) {
             return $this->asJson([
