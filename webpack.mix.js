@@ -1,6 +1,6 @@
 const mix = require("laravel-mix");
-require("laravel-mix-purgecss");
-
+const purgeCss = require("@fullhuman/postcss-purgecss");
+const optionsApp = [];
 const basePath = "./src/resources";
 
 // mix.webpackConfig({
@@ -9,15 +9,29 @@ const basePath = "./src/resources";
 //   },
 // });
 
-mix
-  .sass(`${basePath}/src/styles/app.scss`, "./src/web/css/")
-  .js(`${basePath}/src/systemleads.js`, `./src/web/js`)
-  .react();
 if (mix.inProduction()) {
-  mix.purgeCss({
-    content: [`${basePath}/**/*.jsx`],
-    safelist: {
-      deep: [/accordion*/, /table*/, /collapse/, /show/, /react-datepicker*/],
-    },
-  });
+  optionsApp.push(
+    purgeCss({
+      content: [`${basePath}/**/*.jsx`, "./src/templates/**/*.twig"],
+      safelist: {
+        deep: [
+          /accordion*/,
+          /table*/,
+          /collapse/,
+          /show/,
+          /react-datepicker*/,
+          /col-lg-4/,
+          /gy-4/,
+          /modal*/,
+          /leadSystem*/,
+          /fade/,
+          /show/,
+        ],
+      },
+    })
+  );
 }
+
+mix.sass(`${basePath}/src/styles/app.scss`, "./src/web/css/", {}, optionsApp);
+
+mix.js(`${basePath}/src/systemleads.js`, `./src/web/js`).react();

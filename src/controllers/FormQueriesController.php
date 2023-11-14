@@ -16,7 +16,8 @@ class FormQueriesController extends  Controller
 {
   public function actionIndex(): Response
   {
-    return $this->renderTemplate('lead-scoring-system/lead-system/_queries-history', ["pageTitle" => "Histroial de consultas"]);
+    $context = ["pageTitle" => "Histroial de consultas", "selectedSubnavItem" => "history"];
+    return $this->renderTemplate('lead-scoring-system/lead-system/_queries-history', $context);
   }
 
   public function actionSaveData(): Response

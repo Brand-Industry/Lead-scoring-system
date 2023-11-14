@@ -28,7 +28,7 @@ use craft\events\RegisterUrlRulesEvent;
 class LeadScoringSystem extends Plugin
 {
     public $schemaVersion = '1.0.0';
-    public $hasCpSettings = true;
+    public $hasCpSettings = false;
     public $hasCpSection = true;
     public static $plugin;
 
@@ -61,7 +61,7 @@ class LeadScoringSystem extends Plugin
                     'label' => 'Formularios',
                     'url' => 'lead-scoring-system/forms',
                 ],
-                "queries" => [
+                "history" => [
                     'label' => 'Historial de consultas',
                     'url' => 'lead-scoring-system/queries',
                 ]

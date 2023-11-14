@@ -18,7 +18,8 @@ class LeadSystemController extends Controller
     }
     public function actionForms(): Response
     {
-        return $this->renderTemplate('lead-scoring-system/lead-system/_forms', ["pageTitle" => "Formularios"]);
+        $context = ["pageTitle" => "Formularios", "selectedSubnavItem" => "forms"];
+        return $this->renderTemplate('lead-scoring-system/lead-system/_forms', $context);
     }
 
     public function actionForm(string $handle): Response
