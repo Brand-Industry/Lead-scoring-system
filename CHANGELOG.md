@@ -1,4 +1,13 @@
 # Changelog
+## 2.0.0-beta - 2023-11-17
+Added pagination, corrected lead history query, and adjusted tracking logic.
+
+### Updates
+Implemented pagination to enhance result navigation.
+
+### Fixed
+Corrected lead history query to ensure accurate results.
+Made changes to lead tracking logic for improved efficiency and precision.
 
 ## 2.0.0-beta - 2023-08-28
 
