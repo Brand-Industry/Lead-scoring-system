@@ -70,7 +70,7 @@ class FormQueriesController extends  Controller
         'formHandle',
         'formData',
         'filterDate',
-      ])->from(LeadScoringSystemRecord::tableName());
+      ])->from(LeadScoringSystemRecord::tableName())->orderBy(['dateCreated' => SORT_DESC]);
 
       $results = $query->offset(($page - 1) * $pageSize)
         ->limit($pageSize)
