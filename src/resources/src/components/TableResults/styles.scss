@@ -8,4 +8,28 @@
     cursor: pointer;
     font-size: 16px;
   }
+  &__pageSize,
+  &__pagination {
+    font-size: 16px;
+  }
+  &__pageSize {
+    .form-control {
+      display: inline-block;
+      width: auto;
+    }
+  }
+  &__pagination {
+    &--btn {
+      font-size: 16px;
+      min-width: 25px;
+      min-height: 25px;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.2rem;
+      &.active {
+        background-color: #0dcaf0;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
 }
