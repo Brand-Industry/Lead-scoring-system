@@ -50,11 +50,12 @@ export const TableResults = function ({ dataSubmissions, totalRolesPoints }) {
           <tbody>
             {currentItems.map((row, index) => {
               const porcentaje = (row.totalPoints / totalRolesPoints) * 100;
+              const itemsLength = row.fields.length;
               return (
-                <tr key={index} className="tableResults__items" onClick={() => openModal(row)}>
+                <tr key={index} className={`tableResults__items ${itemsLength > 0 ? 'event' : null}`} onClick={() => (itemsLength > 0 ? openModal(row) : null)}>
                   <td className="py-3">{row.title}</td>
                   <td className="py-3">{GenereteFormatDate(row.date)}</td>
-                  <td className="py-3 text-center">{row.fields.length}</td>
+                  <td className="py-3 text-center">{itemsLength}</td>
                   <td className="py-3">{porcentaje.toFixed()} %</td>
                   <td className="py-3">
                     <a href={row.url} rel="noopener noreferrer" target="_blank">

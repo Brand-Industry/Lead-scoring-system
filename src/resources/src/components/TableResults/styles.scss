@@ -5,8 +5,10 @@
     }
   }
   &__items {
-    cursor: pointer;
     font-size: 16px;
+    &.event {
+      cursor: pointer;
+    }
   }
   &__pageSize,
   &__pagination {
